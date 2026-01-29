@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe de Mantenimiento - CASEOLI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<div class="header">
+    <img src="/static/img/logo.png" alt="CASEOLI Infrastructure Technologies">
+</div>
+
+<div class="container">
+
+<div id="success-message" class="success" style="display:none;">
+    ✔ Informe generado correctamente
+</div>
+
+<h2>Informe de Mantenimiento Correctivo</h2>
+
+<form action="/generar" method="post" enctype="multipart/form-data">
+
+<h3>Información General</h3>
+<input name="municipio" placeholder="Municipio" required>
+<input name="afiliacion" placeholder="Afiliación" required>
+
+<label>Fecha y hora de solicitud</label>
+<input type="datetime-local" name="fecha_solicitud" required>
+
+<label>Fecha y hora de atención</label>
+<input type="datetime-local" name="fecha_atencion" required>
+
+<label>Fecha y hora de cierre</label>
+<input type="datetime-local" name="fecha_cierre" required>
+
+<input name="tecnologia" placeholder="Tecnología (Hardware, CCTV, Red, etc.)" required>
+
+<h3>Atención Brindada</h3>
+<div class="checkbox-group">
+    <label><input type="checkbox" name="ajuste"> Ajuste de parámetros</label>
+    <label><input type="checkbox" name="reparacion"> Reparación de equipo</label>
+    <label><input type="checkbox" name="reubicacion"> Reubicación</label>
+    <label><input type="checkbox" name="cambio"> Cambio de equipo</label>
+    <label><input type="checkbox" name="siniestro"> Siniestro</label>
+    <label><input type="checkbox" name="otros"> Otros</label>
+</div>
+
+<h3>Ticket</h3>
+<input name="ticket" placeholder="Número de ticket" required>
+<textarea name="falla" placeholder="Descripción de la falla" required></textarea>
+<textarea name="solucion" placeholder="Solución aplicada" required></textarea>
+<textarea name="observaciones" placeholder="Observaciones"></textarea>
+
+<h3>Firmas</h3>
+<input name="nombre_coordinador" placeholder="Nombre del Coordinador Operativo">
+<input name="nombre_responsable" placeholder="Nombre del Responsable de Tecnología">
+
+<h3>Reporte Fotográfico (máx. 4 fotos)</h3>
+<input type="file" name="fotos" accept="image/*" multiple required>
+
+<br><br>
+<button type="submit">Generar Informe Word</button>
+
+</form>
+</div>
+
+<script>
+    // Mostrar mensaje si el informe fue generado
+    if (window.location.search.includes("success=1")) {
+        document.getElementById("success-message").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
