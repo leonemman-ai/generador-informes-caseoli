@@ -2,3 +2,4 @@ fastapi
 uvicorn
 docxtpl
 python-multipart
+python-docx
