@@ -2,42 +2,77 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Informe de Mantenimiento - CASEOLI</title>
+    <title>Generador de Documentos - CASEOLI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
 
 <div class="header">
-    <img src="/static/img/logo.png" alt="CASEOLI Infrastructure Technologies">
+    <img src="/static/img/logo.png" alt="CASEOLI">
 </div>
 
 <div class="container">
 
-<div id="success-message" class="success" style="display:none;">
-    ✔ Informe generado correctamente
-</div>
+<h2>Generador de Documentos</h2>
 
-<h2>Informe de Mantenimiento Correctivo</h2>
+<!-- ============================= -->
+<!-- MENSAJE DE BIENVENIDA -->
+<!-- ============================= -->
+<div id="bienvenida">
+    <h3>Bienvenido 👋</h3>
+    <p>
+        Selecciona el tipo de documento que deseas generar.<br>
+        El sistema mostrará únicamente el formulario correspondiente.
+    </p>
+</div>
 
 <form action="/generar" method="post" enctype="multipart/form-data">
 
+<!-- ============================= -->
+<!-- TIPO DE DOCUMENTO -->
+<!-- ============================= -->
+<h3>Tipo de Documento</h3>
+<select name="tipo_documento" id="tipo_documento" required onchange="cambiarFormulario()">
+    <option value="">Seleccione un tipo de documento</option>
+    <option value="mantenimiento">Informe de Mantenimiento</option>
+    <option value="sustitucion">Sustitución de Equipo</option>
+</select>
+
+<!-- ============================= -->
+<!-- CONTENEDOR GENERAL -->
+<!-- ============================= -->
+<div id="contenedor-formularios" style="display:none;">
+
+<!-- ============================= -->
+<!-- DATOS GENERALES -->
+<!-- ============================= -->
+<div id="general">
 <h3>Información General</h3>
-<input name="municipio" placeholder="Municipio" required>
-<input name="afiliacion" placeholder="Afiliación" required>
+
+<input name="municipio" placeholder="Municipio">
+<input name="afiliacion" placeholder="Afiliación">
 
 <label>Fecha y hora de solicitud</label>
-<input type="datetime-local" name="fecha_solicitud" required>
+<input type="datetime-local" name="fecha_solicitud">
 
 <label>Fecha y hora de atención</label>
-<input type="datetime-local" name="fecha_atencion" required>
+<input type="datetime-local" name="fecha_atencion">
 
 <label>Fecha y hora de cierre</label>
-<input type="datetime-local" name="fecha_cierre" required>
+<input type="datetime-local" name="fecha_cierre">
 
-<input name="tecnologia" placeholder="Tecnología (Hardware, CCTV, Red, etc.)" required>
+<input name="tecnologia" placeholder="Tecnología">
+<input name="ticket" placeholder="Número de ticket">
+</div>
 
-<h3>Atención Brindada</h3>
+<!-- ============================= -->
+<!-- MANTENIMIENTO -->
+<!-- ============================= -->
+<div id="form-mantenimiento" style="display:none;">
+
+<h3>Atención Brindada – Mantenimiento</h3>
+
 <div class="checkbox-group">
     <label><input type="checkbox" name="ajuste"> Ajuste de parámetros</label>
     <label><input type="checkbox" name="reparacion"> Reparación de equipo</label>
@@ -47,30 +82,89 @@
     <label><input type="checkbox" name="otros"> Otros</label>
 </div>
 
-<h3>Ticket</h3>
-<input name="ticket" placeholder="Número de ticket" required>
-<textarea name="falla" placeholder="Descripción de la falla" required></textarea>
-<textarea name="solucion" placeholder="Solución aplicada" required></textarea>
+<h3>Detalle del Servicio</h3>
+<textarea name="falla" placeholder="Descripción de la falla"></textarea>
+<textarea name="solucion" placeholder="Solución aplicada"></textarea>
 <textarea name="observaciones" placeholder="Observaciones"></textarea>
 
+</div>
+
+<!-- ============================= -->
+<!-- SUSTITUCIÓN -->
+<!-- ============================= -->
+<div id="form-sustitucion" style="display:none;">
+
+<h3>Equipo Retirado</h3>
+<input name="er_descripcion" placeholder="Descripción">
+<input name="er_marca" placeholder="Marca">
+<input name="er_modelo" placeholder="Modelo">
+<input name="er_serie" placeholder="Serie">
+
+<h3>Equipo Instalado</h3>
+<input name="ei_descripcion" placeholder="Descripción">
+<input name="ei_marca" placeholder="Marca">
+<input name="ei_modelo" placeholder="Modelo">
+<input name="ei_serie" placeholder="Serie">
+
+<textarea name="justificacion" placeholder="Justificación de la sustitución"></textarea>
+
+<select name="tipo_sustitucion">
+    <option value="">Tipo de sustitución</option>
+    <option value="Temporal">Temporal</option>
+    <option value="Reinstalación">Reinstalación</option>
+    <option value="Cambio definitivo">Cambio definitivo</option>
+</select>
+
+</div>
+
+<!-- ============================= -->
+<!-- FIRMAS -->
+<!-- ============================= -->
+<div id="firmas">
 <h3>Firmas</h3>
 <input name="nombre_coordinador" placeholder="Nombre del Coordinador Operativo">
 <input name="nombre_responsable" placeholder="Nombre del Responsable de Tecnología">
+</div>
 
+<!-- ============================= -->
+<!-- FOTOS (SOLO MANTENIMIENTO) -->
+<!-- ============================= -->
+<div id="fotos" style="display:none;">
 <h3>Reporte Fotográfico (máx. 4 fotos)</h3>
-<input type="file" name="fotos" accept="image/*" multiple required>
+<input type="file" name="fotos" accept="image/*" multiple>
+</div>
 
 <br><br>
-<button type="submit">Generar Informe Word</button>
+<button type="submit">Generar Documento Word</button>
+
+</div> <!-- fin contenedor -->
 
 </form>
 </div>
 
+<!-- ============================= -->
+<!-- SCRIPT -->
+<!-- ============================= -->
 <script>
-    // Mostrar mensaje si el informe fue generado
-    if (window.location.search.includes("success=1")) {
-        document.getElementById("success-message").style.display = "block";
+function cambiarFormulario() {
+    const tipo = document.getElementById("tipo_documento").value;
+
+    document.getElementById("bienvenida").style.display = "none";
+    document.getElementById("contenedor-formularios").style.display = "block";
+
+    document.getElementById("form-mantenimiento").style.display = "none";
+    document.getElementById("form-sustitucion").style.display = "none";
+    document.getElementById("fotos").style.display = "none";
+
+    if (tipo === "mantenimiento") {
+        document.getElementById("form-mantenimiento").style.display = "block";
+        document.getElementById("fotos").style.display = "block";
     }
+
+    if (tipo === "sustitucion") {
+        document.getElementById("form-sustitucion").style.display = "block";
+    }
+}
 </script>
 
 </body>
